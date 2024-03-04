@@ -1,6 +1,6 @@
 > Catering Services Web Application using Reactjs
 
-# To check the node bersion
+# To check the node version
 
 ```
 node --version
