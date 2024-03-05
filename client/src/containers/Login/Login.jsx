@@ -4,11 +4,35 @@ import { FaEnvelope ,FaLock, FcGoogle } from '../../assets/icons/root'
 import {motion}  from 'framer-motion'
 import { buttonClick, whileTap } from '../../animations/root'
 
+import { getAuth, signInWithPopup, GoogleAuthProvider} from 'firebase/auth'
+import {app} from '../../config/firebase.config'
+import { validateUserJWTToken } from '../../api/root'
+
 function Login() {
   const [userEmail , setUserEmail] = useState('');
   const [isSignUp , setIsSignUp] = useState(false)
   const [password , setPassword] = useState('')
   const [confirm_password , setConfirm_password] = useState('')
+
+  const firebaseAuth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const loginWithGoogle = async () => {
+   await signInWithPopup(firebaseAuth , provider)
+    .then((userCred) => {
+      firebaseAuth.onAuthStateChanged((cred) => {
+        if(cred){
+          cred.getIdToken()
+          .then((token) => {
+             validateUserJWTToken(token)
+             .then((data) => {
+               console.log(data)
+             });  
+          })
+        }
+      })
+    })
+  }
 
   return (
     <div className='w-screen h-screen flex relative overflow-hidden'>
@@ -19,7 +43,7 @@ function Login() {
        /> */}
 
        { /* CONTENT BOX  */ }
-       <div className='flex flex-col bg-lighttextGray w-[80%] md:w-350 h-full z-10 backdrop-blur-md p-4 px-4 py-6 gap-6'>
+       <div className='flex flex-col bg-lighttextGray w-[80%] md:w-350 h-full z-10 backdrop-blur-md p-4 px-4 py-6 gap-6 overflow-auto'>
         
           <div className='flex items-center justify-start gap-4 w-full '>
              <img src='' alt="LOGO" className='w-8 ' />
@@ -90,6 +114,7 @@ function Login() {
           </div>
 
           <motion.div {...buttonClick} 
+          onClick={ loginWithGoogle}
           className='flex px-15 py-1 justify-center items-center bg-white rounded-2xl hover:cursor-pointer'> 
             <FcGoogle className='text-md'/> 
             <p className='capitalize text-base text-headingColor mx-1'>Signin with Google </p>
