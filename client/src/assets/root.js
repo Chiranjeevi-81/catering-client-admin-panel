@@ -1,0 +1,1 @@
+//export { default as img_file_name} from './Images/--------';

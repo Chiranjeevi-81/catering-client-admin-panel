@@ -1,6 +1,6 @@
 import './App.css';
 import {Routes, Route} from 'react-router-dom'
-import { Main , Login } from './Components/root';
+import { Main , Login } from './containers/root';
 
 function App() {
   return (
